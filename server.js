@@ -27,7 +27,7 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 
-mongoose.connect(uri)
+mongoose.connect(process.env.MONGO_URI || uri)
 .then(()=>{console.log('connected to mongoDB')})
 .catch((err)=> console.error(err))
 

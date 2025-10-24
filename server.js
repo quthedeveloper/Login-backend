@@ -31,6 +31,9 @@ mongoose.connect(process.env.MONGO_URI)
 .then(()=>{console.log('connected to mongoDB')})
 .catch((err)=> console.error(err))
 
+mongoose.connection.on('connected', ()=>{
+    console.log("Render has successfully connected to Atlas");
+})
 
 app.use(express.json());
 

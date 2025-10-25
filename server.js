@@ -25,7 +25,6 @@ app.use(cors({
     origin: [
     "https://register-page-umber.vercel.app",
     "https://register-git-fed084-bryan-quartey-papafio-1700841144s-projects.vercel.app",
-    "https://register-page-m1do4r9ty.vercel.app",
     "http://localhost:5173",
     ],
     credentials: true,

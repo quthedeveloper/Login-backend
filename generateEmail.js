@@ -23,7 +23,9 @@ userEmail.save();
 
 // set email up
 const transport =  nodemailer.createTransport({
-  service: 'gmail',
+  service: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS
@@ -32,7 +34,7 @@ const transport =  nodemailer.createTransport({
 
 try{
   // transport email
-  const info = await transport.sendMail({
+   await transport.sendMail({
     from: process.env.GMAIL_USER,
     to: email,
     subject: `Your OTP: ${OTP.token}`,

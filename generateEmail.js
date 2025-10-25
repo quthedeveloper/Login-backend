@@ -23,12 +23,12 @@ userEmail.save();
 
 // set email up
 const transport =  nodemailer.createTransport({
-  service: "smtp.gmail.com",
-  port: 465,
+  service: "smtp.ethereal.com",
+  port: 587,
   secure: true,
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS
+    user: "ignatius.kuphal84@ethereal.email",
+    pass: "TBHV92x1NGMTcshQGr"
   }
 })
 

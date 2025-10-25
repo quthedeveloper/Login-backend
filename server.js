@@ -22,7 +22,10 @@ const logOutroute = require('./logoutroute');
 
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: [
+        'http://localhost:5173',
+        "https://register-page-umber.vercel.app"
+    ],
     credentials: true,
     optionsSuccessStatus: 200
 }));
@@ -35,6 +38,7 @@ mongoose.connection.on('connected', ()=>{
     console.log("Render has successfully connected to Atlas");
 })
 
+//https://login-backend-izl3.onrender.com
 app.use(express.json());
 
 

@@ -24,7 +24,7 @@ userEmail.save();
 
 // set email up
 const transport =  nodemailer.createTransport({
-  service: "smtp.gmail.com",
+  host: "smtp.gmail.com",
   port: 465,
   secure: true,
   auth: {

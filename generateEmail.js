@@ -1,7 +1,9 @@
 const OTPgenerator = require('./generateOTP');
 require('dotenv').config();
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 const User = require('./schema');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const generateEmail = async (req, res) => {
   try {
@@ -19,37 +21,21 @@ const generateEmail = async (req, res) => {
 
     // Generate OTP
     const OTP = OTPgenerator.generateOTP();
-    user.OTP = OTP.secret; // Save secret
+    user.OTP = OTP.secret;
     await user.save();
 
-    // Set up Nodemailer
-    const transport = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true, // true for port 465
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
-      },
-      connectionTimeout: 40000,
-      logger: true,
-      debug: true
-    });
-
-    // Verify SMTP connection
-    await transport.verify();
-    console.log("SMTP server ready to send emails");
-
-    // Send email
-    await transport.sendMail({
-      from: `"Your App Name" <${process.env.GMAIL_USER}>`,
+    // Send email via SendGrid
+    const msg = {
       to: user.Email,
+      from: process.env.GMAIL_USER, // verified sender
       subject: `Your OTP Code: ${OTP.token}`,
       html: `<p>Hello,</p>
              <p>Your OTP is: <b>${OTP.token}</b>. It will expire in 60 seconds.</p>`
-    });
+    };
 
-    return res.status(200).json({ message: 'OTP email sent successfully.' });
+    await sgMail.send(msg);
+
+    return res.status(200).json({ message: 'OTP email sent successfully😁😁😁😁' });
 
   } catch (err) {
     console.error('Error sending OTP email:', err);

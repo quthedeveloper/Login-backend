@@ -23,12 +23,12 @@ userEmail.save();
 
 // set email up
 const transport =  nodemailer.createTransport({
-  service: "smtp.ethereal.com",
-  port: 587,
+  service: "smtp.gmail.com",
+  port: 465,
   secure: true,
   auth: {
-    user: "ignatius.kuphal84@ethereal.email",
-    pass: "TBHV92x1NGMTcshQGr"
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS
   }
 })
 
@@ -40,7 +40,7 @@ try{
     subject: `Your OTP: ${OTP.token}`,
     html: `<p>This is your OTP: <b>${OTP.token}</b>. This OTP will expire in 60 seconds.</p>`
   });
-  console.log(email);
+
 
   
   res.status(200).json({message: 'email recieved'});

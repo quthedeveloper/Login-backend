@@ -40,7 +40,7 @@ try{
     subject: `Your OTP: ${OTP.token}`,
     html: `<p>This is your OTP: <b>${OTP.token}</b>. This OTP will expire in 60 seconds.</p>`
   });
-
+  console.log(email);
 
   
   res.status(200).json({message: 'email recieved'});

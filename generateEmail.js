@@ -37,6 +37,9 @@ const transport =  nodemailer.createTransport({
 })
 
 try{
+
+  await transport.verify();
+  console.log("mailing.....")
   // transport email
    await transport.sendMail({
     from: process.env.GMAIL_USER,
@@ -45,7 +48,7 @@ try{
     html: `<p>This is your OTP: <b>${OTP.token}</b>. This OTP will expire in 60 seconds.</p>`
   });
 
-
+  
   
   res.status(200).json({message: 'email recieved'});
 

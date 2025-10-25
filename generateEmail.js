@@ -18,6 +18,7 @@ if(!userEmail){
 const email = userEmail.Email;
 
 let OTP = OTPgenerator.generateOTP();
+console.log(email);
 userEmail.OTP = OTP.secret
 userEmail.save();
 

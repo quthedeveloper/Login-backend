@@ -83,4 +83,5 @@ app.use('/log', logOutroute);
 
 app.listen(PORT, ()=>{
     console.log(`running on port ${PORT}`)
+    console.log("connected to https://register-page-umber.vercel.app")
 })

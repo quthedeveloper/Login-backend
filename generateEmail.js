@@ -23,11 +23,13 @@ userEmail.save();
 
 // set email up
 const transport =  nodemailer.createTransport({
-  service: 'gmail',
+  service: 'smtp.gmail.com',
+  host: 587,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS
-  }
+  },
+  secure: false
 })
 
 try{

@@ -1,9 +1,10 @@
 const OTPgenerator = require('./generateOTP');
 require('dotenv').config();
-const sgMail = require('@sendgrid/mail');
+const nodemailer = require('nodemailer');
 const User = require('./schema');
+const { text } = require('express');
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 
 const generateEmail = async (req, res) => {
   try {
@@ -18,20 +19,41 @@ const generateEmail = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
     }
-
+    //hcyr jaft hsxz kbf
     // Generate OTP
     const OTP = OTPgenerator.generateOTP();
     user.OTP = OTP.secret;
     await user.save();
 
     // Send email via SendGrid
-    const msg = {
-      to: user.Email,
-      from: `Expense tracker <${process.env.GMAIL_USER}>`, // verified sender
-      subject: `Your OTP Code: ${OTP.token}`,
-      html: `<p>Hello,</p>
-             <p>Your OTP is: <b>${OTP.token}</b>. It will expire in 60 seconds.</p>`
-    };
+    // const msg = {
+    //   to: user.Email,
+    //   from: `Expense tracker <${process.env.GMAIL_USER}>`, // verified sender
+    //   subject: `Your OTP Code: ${OTP.token}`,
+    //   html: `<p>Hello,</p>
+    //          <p>Your OTP is: <b>${OTP.token}</b>. It will expire in 60 seconds.</p>`
+    // };
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.GMAIL_HOST,
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS
+      }
+    })
+
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: emailInput,
+      subject: `Expense tracker OTP sent`,
+      text: `your otp is ${OTP.token} `
+    }
+
+    transporter.sendMail(mailOptions, (err, info)=>{
+      err ? console.error(err) : console.log(info.response);
+    })
 
     await sgMail.send(msg);
 

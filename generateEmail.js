@@ -1,11 +1,15 @@
-const { Resend } = require('resend');
+// brevoEmail.js
+const brevo = require('@getbrevo/brevo');
 const OTPgenerator = require('./generateOTP');
 require('dotenv').config();
 const User = require('./schema');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Brevo client
+const client = brevo.ApiClient.instance;
+client.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
+const transactionalApi = new brevo.TransactionalEmailsApi();
 
-const generateEmail = async(req, res) => {
+const generateEmail = async (req, res) => {
   try {
     const emailInput = req.query.email || req.body?.email;
     if (!emailInput) {
@@ -21,13 +25,15 @@ const generateEmail = async(req, res) => {
     user.OTP = OTP.secret;
     await user.save();
 
-    // Send the email via Resend
-    await resend.emails.send({
-      from: 'Expense Tracker <onboarding@resend.dev>', // Resend shared sender (no domain needed)
-      to: emailInput,
+    // Send the email via Brevo
+    const sendSmtpEmail = {
+      sender: { name: 'Expense Tracker', email: 'papafiobryan@gmail.com' }, 
+      to: [{ email: emailInput }],
       subject: 'Your OTP Code',
-      html: `<p>Your OTP is <b>${OTP.token}</b>. It expires in 60 seconds.</p>`
-    });
+      htmlContent: `<p>Your OTP is <b>${OTP.token}</b>. It expires in 60 seconds.</p>`
+    };
+
+    await transactionalApi.sendTransacEmail(sendSmtpEmail);
 
     return res.status(200).json({ message: 'OTP email sent successfully 🎉' });
   } catch (err) {

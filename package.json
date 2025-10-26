@@ -11,6 +11,7 @@
   "author": "Bryan Quartey-Papafio",
   "license": "ISC",
   "dependencies": {
+    "@getbrevo/brevo": "^3.0.1",
     "@sendgrid/mail": "^8.1.6",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",

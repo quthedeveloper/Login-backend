@@ -1,13 +1,12 @@
-// brevoEmail.js
-const brevo = require('@getbrevo/brevo');
+// generateEmail.js
+const Brevo = require('@getbrevo/brevo');
 const OTPgenerator = require('./generateOTP');
 require('dotenv').config();
 const User = require('./schema');
 
-// Initialize Brevo client
-const client = brevo.ApiClient.instance;
-client.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
-const transactionalApi = new brevo.TransactionalEmailsApi();
+// ✅ Correct initialization for Brevo SDK (v3+)
+const apiInstance = new Brevo.TransactionalEmailsApi();
+apiInstance.authentications['apiKey'] = { apiKey: process.env.BREVO_API_KEY };
 
 const generateEmail = async (req, res) => {
   try {
@@ -25,19 +24,18 @@ const generateEmail = async (req, res) => {
     user.OTP = OTP.secret;
     await user.save();
 
-    // Send the email via Brevo
     const sendSmtpEmail = {
-      sender: { name: 'Expense Tracker', email: 'papafiobryan@gmail.com' }, 
+      sender: { name: 'Expense Tracker', email: 'papafiobryan@gmail.com' },
       to: [{ email: emailInput }],
       subject: 'Your OTP Code',
       htmlContent: `<p>Your OTP is <b>${OTP.token}</b>. It expires in 60 seconds.</p>`
     };
 
-    await transactionalApi.sendTransacEmail(sendSmtpEmail);
-
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
     return res.status(200).json({ message: 'OTP email sent successfully 🎉' });
+
   } catch (err) {
-    console.error('Error sending OTP email:', err);
+    console.error('Error sending OTP email:', err.response?.text || err.message);
     return res.status(500).json({ message: 'Server error sending OTP.' });
   }
 };

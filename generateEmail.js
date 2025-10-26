@@ -27,7 +27,7 @@ const generateEmail = async (req, res) => {
     // Send email via SendGrid
     const msg = {
       to: user.Email,
-      from: process.env.GMAIL_USER, // verified sender
+      from: `Expense tracker <${process.env.GMAIL_USER}>`, // verified sender
       subject: `Your OTP Code: ${OTP.token}`,
       html: `<p>Hello,</p>
              <p>Your OTP is: <b>${OTP.token}</b>. It will expire in 60 seconds.</p>`

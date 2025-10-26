@@ -6,7 +6,8 @@ const User = require('./schema');
 
 // ✅ Correct initialization for Brevo SDK (v3+)
 const apiInstance = new Brevo.TransactionalEmailsApi();
-apiInstance.authentications['apiKey'] = { apiKey: process.env.BREVO_API_KEY };
+apiInstance.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+
 
 const generateEmail = async (req, res) => {
   try {

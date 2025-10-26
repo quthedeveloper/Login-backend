@@ -2,7 +2,7 @@ const OTPgenerator = require('./generateOTP');
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 const User = require('./schema');
-const { text } = require('express');
+
 
 
 
@@ -57,7 +57,7 @@ const generateEmail = async (req, res) => {
 
   } catch (err) {
     console.error('Error sending OTP email:', err);
-    return res.status(500).json({ message: 'Server error sending OTP.' });
+    return res.status(500).json({ message: 'Server error for OTP.' });
   }
 };
 

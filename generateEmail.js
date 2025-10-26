@@ -1,63 +1,38 @@
+const { Resend } = require('resend');
 const OTPgenerator = require('./generateOTP');
 require('dotenv').config();
-const nodemailer = require('nodemailer');
 const User = require('./schema');
 
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-
-
-const generateEmail = async (req, res) => {
+const generateEmail = async(req, res) => {
   try {
-    // Get email from query or body
     const emailInput = req.query.email || req.body?.email;
     if (!emailInput) {
       return res.status(400).json({ message: 'Please provide an email.' });
     }
 
-    // Find user
     const user = await User.findOne({ Email: emailInput });
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
     }
-    //hcyr jaft hsxz kbf
-    // Generate OTP
+
     const OTP = OTPgenerator.generateOTP();
     user.OTP = OTP.secret;
     await user.save();
 
-    // Send email via SendGrid
-    // const msg = {
-    //   to: user.Email,
-    //   from: `Expense tracker <${process.env.GMAIL_USER}>`, // verified sender
-    //   subject: `Your OTP Code: ${OTP.token}`,
-    //   html: `<p>Hello,</p>
-    //          <p>Your OTP is: <b>${OTP.token}</b>. It will expire in 60 seconds.</p>`
-    // };
-
-    const transporter = nodemailer.createTransport({
-      host: process.env.BREVO_HOST,
-      port: process.env.BREVO_PORT,
-      secure: false,
-       auth: {
-        user: process.env.BREVO_USER,
-        pass: process.env.BREVO_PASS
-      }
-    })
-
-    const mailOptions = {
-      from: `Expense<${process.env.BREVO_USER}>`,
+    // Send the email via Resend
+    await resend.emails.send({
+      from: 'Expense Tracker <onboarding@resend.dev>', // Resend shared sender (no domain needed)
       to: emailInput,
-      subject: `Expense tracker OTP sent`,
-      text: `your otp is ${OTP.token} `
-    }
+      subject: 'Your OTP Code',
+      html: `<p>Your OTP is <b>${OTP.token}</b>. It expires in 60 seconds.</p>`
+    });
 
-    await transporter.sendMail(mailOptions);
-
-    return res.status(200).json({ message: 'OTP email sent successfully😁😁😁😁😁' });
-
+    return res.status(200).json({ message: 'OTP email sent successfully 🎉' });
   } catch (err) {
     console.error('Error sending OTP email:', err);
-    return res.status(500).json({ message: 'Server error for OTP.' });
+    return res.status(500).json({ message: 'Server error sending OTP.' });
   }
 };
 

@@ -55,8 +55,6 @@ const generateEmail = async (req, res) => {
       err ? console.error(err) : console.log(info.response);
     })
 
-    await sgMail.send(msg);
-
     return res.status(200).json({ message: 'OTP email sent successfully😁😁😁😁' });
 
   } catch (err) {

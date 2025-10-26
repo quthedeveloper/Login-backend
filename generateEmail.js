@@ -51,11 +51,9 @@ const generateEmail = async (req, res) => {
       text: `your otp is ${OTP.token} `
     }
 
-    transporter.sendMail(mailOptions, (err, info)=>{
-      err ? console.error(err) : console.log(info.response);
-    })
+    await transporter.sendMail(mailOptions);
 
-    return res.status(200).json({ message: 'OTP email sent successfully😁😁😁😁😁😁' });
+    return res.status(200).json({ message: 'OTP email sent successfully😁😁😁😁😁' });
 
   } catch (err) {
     console.error('Error sending OTP email:', err);

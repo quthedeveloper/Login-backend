@@ -35,17 +35,17 @@ const generateEmail = async (req, res) => {
     // };
 
     const transporter = nodemailer.createTransport({
-      host: process.env.GMAIL_HOST,
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
+      host: process.env.BREVO_HOST,
+      port: process.env.BREVO_PORT,
+      secure: false,
+       auth: {
+        user: process.env.BREVO_USER,
+        pass: process.env.BREVO_PASS
       }
     })
 
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: `Expense<${process.env.BREVO_USER}>`,
       to: emailInput,
       subject: `Expense tracker OTP sent`,
       text: `your otp is ${OTP.token} `
